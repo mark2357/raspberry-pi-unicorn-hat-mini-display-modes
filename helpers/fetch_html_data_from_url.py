@@ -8,7 +8,7 @@ def fetch_html_and_extract_data_from_url(url):
     '''requests data from url and returns the beautiful soup object'''
 
     # uses urllib as there was some issues with using requests
-    # (specifically getting 418 when running on raspberry pi) 
+    # (specifically getting 418 when running on raspberry pi)
 
     # Make a GET request to fetch the raw HTML content
     response = urllib.request.urlopen(url)

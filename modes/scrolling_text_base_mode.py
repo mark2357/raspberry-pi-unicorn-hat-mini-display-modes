@@ -1,3 +1,4 @@
+'''contains base class that is used to display scrolling text'''
 
 
 from helpers.text_display import TextDisplay
