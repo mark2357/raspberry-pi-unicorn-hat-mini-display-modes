@@ -46,4 +46,50 @@
 # from modules.random_pokemon_info.library.get_random_info import get_random_info
 # print(get_random_info())
 
-from helpers.get_config import get_config
+# from helpers.get_config import get_config
+
+# from bs4 import BeautifulSoup
+# import requests
+
+# def fetch_html_and_extract_data_from_url(url):
+#     '''requests data from url and returns the beautiful soup object'''
+#     # Make a GET request to fetch the raw HTML content
+#     html_content = requests.get(url).text
+
+#     # Parse the html content
+#     soup = BeautifulSoup(html_content, "lxml")
+#     return soup
+
+
+
+
+# data = fetch_html_and_extract_data_from_url('https://covidlive.com.au/vic')
+
+# table = data.find("table", class_="DAILY-CASES")
+# table_rows = table.findAll('tr')
+# # result.findChild("a", recursive=False).decode_contents()
+
+# output_data = []
+
+# for table_row in table_rows:
+
+#     # skips the header
+#     if table_row.get('class') == ['TH']:
+#         continue
+
+#     cases = table_row.find('td', class_='NET').find('span').decode_contents()
+#     date = table_row.find('td', class_='DATE').decode_contents()
+#     # output_data
+#     # child = item.findChild("a", recursive=False)
+#     # if item.getclass = 
+#     print(f'{date} had {cases} cases')
+
+from helpers.fetch_html_data_from_url import fetch_html_and_extract_data_from_url
+
+print(fetch_html_and_extract_data_from_url('https://covidlive.com.au/vic'))
+
+# import urllib.request
+
+# r = urllib.request.urlopen('https://covidlive.com.au/vic')
+# print(r.read())
+# print(r.getcode())

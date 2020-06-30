@@ -15,12 +15,12 @@ class ScrollingTextBaseMode:
         self.color_g = 100
         self.color_b = 120
         self.text_display = TextDisplay(unicornhatmini, self.current_text)
-        
+
         self.update_current_text()
 
 
     def display_frame(self):
-
+        '''displays new frame of text on screen'''
         self.offset_x += 1
 
         if self.offset_x > self.current_text_length:
@@ -31,10 +31,12 @@ class ScrollingTextBaseMode:
 
 
     def update_current_text(self):
+        '''should be overridden by child classes'''
         raise NotImplementedError()
 
 
     def set_current_text(self, new_current_text):
+        '''should be called by child classes to correctly set the current text (WARNING do not set text by assigning variable)'''
         self.current_text = new_current_text
         self.current_text_length = get_text_width(self.unicornhatmini, self.current_text)
         self.text_display.update_text(self.current_text)
