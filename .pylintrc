@@ -3,6 +3,8 @@ max-line-length=200
 
 # this is disabled as several modules will not be installed on the development machine that will be installed on the raspberry pi
 disable=import-error
+# disabled as there this error rases several false positives
+disable=no-name-in-module
 
 # Good variable names which should always be accepted, separated by a comma
 good-names=i,j,k,x,y

@@ -6,6 +6,7 @@ import math
 from colorsys import hsv_to_rgb
 from PIL import Image, ImageDraw
 
+from helpers.get_project_path import get_project_path
 
 class ClockMode:
     '''a led mode that displays a clock with the current time'''
@@ -84,4 +85,4 @@ class ClockMode:
 
     def get_image_for_number(self, num):
         '''returns image for the given number'''
-        return Image.open('data_files/3x5_font/' + str(int(num)) + '.png')
+        return Image.open(get_project_path() + '/data_files/3x5_font/' + str(int(num)) + '.png')

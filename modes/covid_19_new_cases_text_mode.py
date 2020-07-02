@@ -26,7 +26,7 @@ class Covid19NewCasesTextMode(ScrollingTextBaseMode):
     def check_update_data(self):
         '''checks to determine if the current data is out of date'''
         # how often the mode should update the data
-        update_interval = float(self.config['COVID_VIC_NEW_CASES']['UPDATE_INTERVAL'])
+        update_interval = float(self.config['COVID_VIC_NEW_CASES_MODE']['UPDATE_INTERVAL'])
 
         if self.last_data_update + update_interval < time.time():
             self.update_data()

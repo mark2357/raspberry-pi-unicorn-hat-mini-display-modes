@@ -2,7 +2,7 @@
 # import sys
 
 from PIL import Image, ImageDraw, ImageFont
-# from unicornhatmini import UnicornHATMini
+from helpers.get_project_path import get_project_path
 
 class TextDisplay:
     '''used to easily display text on grid/screen'''
@@ -12,7 +12,7 @@ class TextDisplay:
 
         # Load a nice 5x7 pixel font
         # Granted it's actually 5x8 for some reason :| but that doesn't matter
-        self.font = ImageFont.truetype('data_files/5x7.ttf', 8)
+        self.font = ImageFont.truetype(get_project_path() + '/data_files/5x7.ttf', 8)
 
         self.update_text(text)
 
