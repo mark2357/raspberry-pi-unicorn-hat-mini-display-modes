@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
-'''script that should be run to start the program/script'''
+'''script that only runs the webserver and not the display controller'''
 
-
-from display_controller import DisplayController
 
 import web
 from web.httpserver import StaticMiddleware
@@ -14,34 +12,22 @@ import json
 class index:
     def GET(self):
         # return "Hello, world!"
-        return render.index()
+        mode_names = ['Clock', 'Numbers Facts', 'Random Pokemon Info', 'Covid 19 New Cases', 'Pixel Rain']
+        return render.index(mode_names)
 
     def POST(self):
-        global display_controller
         data = web.data() # you can get data use this method
         json_data = json.loads(data)
         print(json_data['mode'])
-        display_controller.set_mode(json_data['mode'])
-        raise web.seeother('/')
-
-
-def run_display():
-    global display_controller
-    display_controller.run()
+        
+        # returns the mode that was sent (in full system this will send the new mode)
+        web.header('Access-Control-Allow-Origin', '*')
+        web.header('Content-Type', 'application/json')
+        return "{\"mode\": " + str(json_data['mode']) + "}"
 
 
 if __name__ == "__main__":
     try:
-        print(f'__name__ is: {__name__}')
-        print('creating display controller')
-        display_controller = DisplayController()
-
-        p1 = threading.Thread(target = run_display)
-        print('starting display controller thread')
-        p1.start()
-        print('finished starting display controller thread')
-
-
         print('starting webserver')
 
         render = web.template.render('webserver/templates/')
@@ -56,6 +42,3 @@ if __name__ == "__main__":
 
     except KeyboardInterrupt:
         print('KeyboardInterrupt')
-        display_controller.stop()
-        p1.join()
-        print('p1.join() finished')
