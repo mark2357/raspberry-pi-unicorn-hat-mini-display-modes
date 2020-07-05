@@ -43,38 +43,54 @@ class Covid19NewCasesTextMode(ScrollingTextBaseMode):
     def extract_string_from_webpage(self):
         '''extracts data from webpage'''
 
-        data = fetch_html_and_extract_data_from_url('https://covidlive.com.au/vic')
-
-        table = data.find("table", class_="DAILY-CASES")
-        if table is None:
-            print('error could not find table')
-            return None
-
-        table_rows = table.findAll('tr')
-
-        if table_rows is None:
-            print('error could not find table_rows in table')
-            return None
 
         output_data = []
+        try:
+            data = fetch_html_and_extract_data_from_url('https://covidlive.com.au/vic')
 
-        for table_row in table_rows:
-            # skips the header
-            if table_row.get('class') == ['TH']:
-                continue
+            table = data.find("table", class_="DAILY-CASES")
+            if table is None:
+                print('error could not find table')
+                return None
 
-            cases = table_row.find('td', class_='NET').find('span').decode_contents()
-            date = table_row.find('td', class_='DATE').decode_contents()
-            day = dict()
-            day['date'] = date
-            day['cases'] = cases
-            output_data.append(day)
+            table_rows = table.findAll('tr')
 
-        todays_data = output_data[len(output_data) - 1]
-        yesterdays_data = output_data[len(output_data) - 2]
-        output_string = ''
-        if todays_data['cases'].strip() == '':
-            output_string = f"todays cases haven't been released yet but yesterday had {yesterdays_data['cases']} cases"
+            if table_rows is None:
+                print('error could not find table_rows in table')
+                return None
+
+
+            for table_row in table_rows:
+                # skips the header
+                if table_row.get('class') == ['TH']:
+                    continue
+
+                date = table_row.find('td', class_='DATE').decode_contents()
+
+                cases_cell = table_row.find('td', class_='NET')
+                cases_cell_span = cases_cell.find('span')
+                # will occur when cases haven't been released yet
+                if cases_cell_span is None and cases_cell.decode_contents() == '-':
+                    cases = None
+                # will occur when cases have been released
+                else:
+                    cases = cases_cell_span.decode_contents()
+
+                day = dict()
+                day['date'] = date
+                day['cases'] = cases
+                output_data.append(day)
+
+        except:
+            print('error in processing data from webpage for covid 19 new cases text mode')
+        if len(output_data) > 1:
+            todays_data = output_data[len(output_data) - 1]
+            yesterdays_data = output_data[len(output_data) - 2]
+            output_string = ''
+            if todays_data['cases'] is None:
+                output_string = f"todays cases haven't been released yet but yesterday had {yesterdays_data['cases']} cases"
+            else:
+                output_string = f"today had {todays_data['cases']} new cases compared to yesterdays {yesterdays_data['cases']}"
+            return output_string
         else:
-            output_string = f"today had {todays_data['cases']} new cases compared to yesterdays {yesterdays_data['cases']}"
-        return output_string
+            return 'Error in retreving data'

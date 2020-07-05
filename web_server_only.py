@@ -9,7 +9,7 @@ from web_controller import WebController
 
 # defines class used for handling webserver requests
 class Index:
-    '''class used for handling web requests'''
+    '''handles the requests for the / endpoint'''
 
     # pylint: disable=invalid-name
     def GET(self):
@@ -22,6 +22,9 @@ class Index:
             print('internal server error')
             return web.InternalError()
 
+
+class ChangeMode:
+    '''handles the requests for the /change-mode/ endpoint'''
 
     # pylint: disable=invalid-name
     def POST(self):
@@ -55,6 +58,15 @@ class Index:
             return web.InternalError()
 
 
+class Shutdown:
+    '''handles the requests for the /shutdown/ endpoint'''
+    # pylint: disable=invalid-name
+    def POST(self):
+        '''handles post requests to the server'''
+        print('starting server shutdown process')
+        web.header('Content-Type', 'text/plain')
+        return web.OK()
+
 if __name__ == "__main__":
     try:
         print('starting webserver')
@@ -63,6 +75,8 @@ if __name__ == "__main__":
 
         urls = (
             '/', 'Index',
+            '/change-mode/', 'ChangeMode',
+            '/shutdown/', 'Shutdown'
         )
 
         app = WebController(urls, globals())

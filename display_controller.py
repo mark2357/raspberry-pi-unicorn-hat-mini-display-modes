@@ -92,8 +92,11 @@ class DisplayController:
                 if self.mode_update_needed is True:
                     self.update_mode()
 
-                # print(f'self.mode_update_needed {self.mode_update_needed}, {self.mode_index}')
 
+            if not self.running:
+                print('display controller shutting down')
+                self.unicornhatmini.clear()
+                self.unicornhatmini.show()
 
         except KeyboardInterrupt:
             print('KeyboardInterrupt')

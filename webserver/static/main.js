@@ -1,8 +1,9 @@
-function on_click(e, mode_index) {
+function on_click_mode_switch(e, mode_index) {
     
     // sends post request to server to set mode of LED display
+    let baseUrl = window.location.href;
     let xhr = new XMLHttpRequest();
-    xhr.open("POST", window.location.href, true);
+    xhr.open("POST", baseUrl + 'change-mode/', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
 
     // handles the response from the server
@@ -27,4 +28,21 @@ function on_click(e, mode_index) {
     xhr.send(JSON.stringify({
         'mode': mode_index
     }));
+}
+
+function on_click_shutdown() {
+    
+    // sends post request to server to shutdown the server
+    let baseUrl = window.location.href;
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", baseUrl + 'shutdown/', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    // handles the response from the server
+    // xhr.onreadystatechange = function() {
+    //     if (xhr.readyState == XMLHttpRequest.DONE) {
+            
+    //     }
+    // }
+    xhr.send();
 }

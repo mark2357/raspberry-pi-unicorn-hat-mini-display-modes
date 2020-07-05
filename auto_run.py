@@ -9,6 +9,7 @@ import web
 
 from display_controller import DisplayController
 from web_controller import WebController
+from shutdown_script import shutdown_script
 
 # pylint: disable=invalid-name
 display_controller = None
@@ -28,6 +29,9 @@ class Index:
             print('internal server error')
             return web.InternalError()
 
+
+class ChangeMode:
+    '''handles the requests for the /change-mode/ endpoint'''
 
     # pylint: disable=invalid-name
     def POST(self):
@@ -65,6 +69,21 @@ class Index:
             return web.InternalError()
 
 
+class Shutdown:
+    '''handles the requests for the /shutdown/ endpoint'''
+    # pylint: disable=invalid-name
+    def POST(self):
+        '''handles post requests to the server'''
+        print('starting server shutdown process')
+
+        # shutsdown the LEDs
+        global display_controller
+        display_controller.stop()
+
+        shutdown_script()
+        web.header('Content-Type', 'text/plain')
+        return web.OK()
+
 
 def run_display():
     '''function that runs the display controller, should be run on a different thread'''
@@ -88,6 +107,8 @@ if __name__ == "__main__":
 
         urls = (
             '/', 'Index',
+            '/change-mode/', 'ChangeMode',
+            '/shutdown/', 'Shutdown'
         )
 
         app = WebController(urls, globals())
