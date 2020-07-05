@@ -2,8 +2,6 @@
 
 import time
 from unicornhatmini import UnicornHATMini
-from gpiozero import Button
-import random
 
 # from shutdown_script import shutdown_script
 from helpers.get_config import get_config
@@ -24,8 +22,8 @@ class DisplayController:
         self.config = get_config()
         self.mode_index = int(self.config['GENERAL']['INITIAL_MODE_INDEX'])
         self.mode_update_needed = False
-        self.id = random.randrange(0, 100)
-        print(f'DisplayController init {self.id}')
+        self.running = False
+
 
     def mode_increment(self):
         '''used to go to the next mode'''
@@ -43,18 +41,18 @@ class DisplayController:
         self.mode_update_needed = True
 
 
-    def set_mode(self, newMode):
-        print(f'set_mode called {self.id}')
-        self.mode_index = newMode
+    def set_mode(self, new_mode):
+        '''sets the current mode'''
+
+        self.mode_index = new_mode
         if self.mode_index > self.get_max_mode_index():
             self.mode_index = 0
-        
+
         elif self.mode_index < 0:
             self.mode_index = self.get_max_mode_index()
 
         self.mode_update_needed = True
         print(f'self.mode_update_needed: {self.mode_update_needed}')
-
 
 
     def update_mode(self):
@@ -72,52 +70,26 @@ class DisplayController:
         return len(self.modes) - 1
 
 
-    def pressed(self, button):
-        '''called when a button is pressed'''
-        # print(button.pin.number)
-        if button.pin.number is 5:
-            self.mode_increment()
-
-        # if button.pin.number is 6:
-
-        if button.pin.number is 16:
-            self.mode_decrement()
-
-        # if button.pin.number is 24:
-            # clears led colour before shuting down system
-            # unicornhatmini.clear()
-            # shutdown_script()
-
-
     def run(self):
         '''used to start running the led display'''
-        # button_a = Button(5)
-        # button_b = Button(6)
-        # button_x = Button(16)
-        # button_y = Button(24)
-
-        self.unicornhatmini.set_brightness(float(self.config['GENERAL']['BRIGHTNESS']))
-        self.unicornhatmini.set_rotation(int(self.config['GENERAL']['ROTATION']))
-        self.update_mode()
-        self.running = True
         try:
-            # button_a.when_pressed = self.pressed
-            # button_b.when_pressed = self.pressed
-            # button_x.when_pressed = self.pressed
-            # button_y.when_pressed = self.pressed
+            self.unicornhatmini.set_brightness(float(self.config['GENERAL']['BRIGHTNESS']))
+            self.unicornhatmini.set_rotation(int(self.config['GENERAL']['ROTATION']))
+            self.update_mode()
+            self.running = True
 
             frame_interval = 1.0 / float(self.config['GENERAL']['FPS'])
 
             while self.running:
                 start_time = time.time()
-                
+
                 self.mode.display_frame()
 
                 end_time = time.time()
                 if end_time - start_time < frame_interval:
                     time.sleep(frame_interval - (end_time - start_time))
 
-                if self.mode_update_needed == True:
+                if self.mode_update_needed is True:
                     self.update_mode()
 
                 # print(f'self.mode_update_needed {self.mode_update_needed}, {self.mode_index}')
@@ -125,11 +97,6 @@ class DisplayController:
 
         except KeyboardInterrupt:
             print('KeyboardInterrupt')
-
-            # button_a.close()
-            # button_b.close()
-            # button_x.close()
-            # button_y.close()
 
 
     def stop(self):

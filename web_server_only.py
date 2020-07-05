@@ -2,15 +2,18 @@
 '''script that only runs the webserver and not the display controller'''
 
 
-import web
-from web.httpserver import StaticMiddleware
-import threading
 import json
+import web
 
+from web_controller import WebController
 
 # defines class used for handling webserver requests
-class index:
+class Index:
+    '''class used for handling web requests'''
+
+    # pylint: disable=invalid-name
     def GET(self):
+        '''handles get requests to the server'''
         try:
             mode_names = ['Clock', 'Numbers Facts', 'Random Pokemon Info', 'Covid 19 New Cases', 'Pixel Rain']
             current_mode_index = 0
@@ -19,7 +22,10 @@ class index:
             print('internal server error')
             return web.InternalError()
 
+
+    # pylint: disable=invalid-name
     def POST(self):
+        '''handles post requests to the server'''
         try:
             # gets post data
             data = web.data()
@@ -38,7 +44,7 @@ class index:
                 return "{\"mode\": " + str(mode) + "}"
 
             else:
-                print(f'post request doesn\'t contain new mode')
+                print('post request doesn\'t contain new mode')
                 return web.BadRequest()
         except ValueError:
             # catches error from json.loads
@@ -56,12 +62,11 @@ if __name__ == "__main__":
         render = web.template.render('webserver/templates/')
 
         urls = (
-            '/', 'index',
+            '/', 'Index',
         )
 
-        app = web.application(urls, globals())
-        # 'lambda app: StaticMiddleware(app, '/webserver/')' is used to allow static files to be hosted from within the webserver folder
-        app.run(lambda app: StaticMiddleware(app, '/webserver/'))
+        app = WebController(urls, globals())
+        app.run()
 
     except KeyboardInterrupt:
         print('KeyboardInterrupt')

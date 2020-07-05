@@ -10,7 +10,7 @@ python 3 (will not work correctly with python 2.7)
 ### python modules
 the following python modules are required
 requests
-requrets-cache
+requests-cache
 
 
 ## running scripts
