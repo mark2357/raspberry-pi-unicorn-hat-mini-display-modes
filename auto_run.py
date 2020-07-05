@@ -13,26 +13,57 @@ import json
 # defines class used for handling webserver requests
 class index:
     def GET(self):
-        # return "Hello, world!"
-        return render.index()
+        try:
+            mode_names = ['Clock', 'Numbers Facts', 'Random Pokemon Info', 'Covid 19 New Cases', 'Pixel Rain']
+            current_mode_index = 0
+            return render.index(mode_names, current_mode_index)
+        except:
+            print('internal server error')
+            return web.InternalError()
 
     def POST(self):
-        global display_controller
-        data = web.data() # you can get data use this method
-        json_data = json.loads(data)
-        print(json_data['mode'])
-        display_controller.set_mode(json_data['mode'])
-        raise web.seeother('/')
+        try:
+            # gets post data
+            data = web.data()
+            # tries to convert data to json (error handled below)
+            json_data = json.loads(data)
+
+            mode = None
+            # makes sure mode is in the json data
+            if 'mode' in json_data:
+                mode = int(json_data['mode'])
+                print(f'new mode selected with index: {mode}')
+                global display_controller
+
+                if isinstance(mode, int):
+                    display_controller.set_mode(mode)
+
+                # returns the mode that was sent (in full system this will send the new mode)
+                web.header('Access-Control-Allow-Origin', '*')
+                web.header('Content-Type', 'application/json')
+                return "{\"mode\": " + str(mode) + "}"
+
+            else:
+                print(f'post request doesn\'t contain new mode')
+                return web.BadRequest()
+        except ValueError:
+            # catches error from json.loads
+            print('data from post request is not valid json')
+            return web.BadRequest()
+        except:
+            print('internal server error')
+            return web.InternalError()
+
 
 
 def run_display():
+    '''function that runs the display controller, should be run on a different thread'''
     global display_controller
     display_controller.run()
 
 
 if __name__ == "__main__":
     try:
-        print(f'__name__ is: {__name__}')
         print('creating display controller')
         display_controller = DisplayController()
 
@@ -43,7 +74,6 @@ if __name__ == "__main__":
 
 
         print('starting webserver')
-
         render = web.template.render('webserver/templates/')
 
         urls = (
@@ -58,4 +88,4 @@ if __name__ == "__main__":
         print('KeyboardInterrupt')
         display_controller.stop()
         p1.join()
-        print('p1.join() finished')
+        print('finished waiting for display controller thread to stop')

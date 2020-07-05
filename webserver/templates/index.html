@@ -1,4 +1,4 @@
-$def with (mode_names)
+$def with (mode_names, current_mode_index)
 <html>
     <head>
         <title>LED Modes</title>
@@ -13,7 +13,10 @@ $def with (mode_names)
             </div>
             <div class="content-wrapper">
                 $for x in range(len(mode_names)):
-                    <button onclick="on_click($x)">
+                    $ class_name = ''
+                    $if x == current_mode_index:
+                        $ class_name = 'active-mode'
+                    <button class='$class_name' onclick="on_click(this, $x)">
                     $mode_names[x]
                     </button>
             </div>

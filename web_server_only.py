@@ -11,19 +11,42 @@ import json
 # defines class used for handling webserver requests
 class index:
     def GET(self):
-        # return "Hello, world!"
-        mode_names = ['Clock', 'Numbers Facts', 'Random Pokemon Info', 'Covid 19 New Cases', 'Pixel Rain']
-        return render.index(mode_names)
+        try:
+            mode_names = ['Clock', 'Numbers Facts', 'Random Pokemon Info', 'Covid 19 New Cases', 'Pixel Rain']
+            current_mode_index = 0
+            return render.index(mode_names, current_mode_index)
+        except:
+            print('internal server error')
+            return web.InternalError()
 
     def POST(self):
-        data = web.data() # you can get data use this method
-        json_data = json.loads(data)
-        print(json_data['mode'])
-        
-        # returns the mode that was sent (in full system this will send the new mode)
-        web.header('Access-Control-Allow-Origin', '*')
-        web.header('Content-Type', 'application/json')
-        return "{\"mode\": " + str(json_data['mode']) + "}"
+        try:
+            # gets post data
+            data = web.data()
+            # tries to convert data to json (error handled below)
+            json_data = json.loads(data)
+
+            mode = None
+            # makes sure mode is in the json data
+            if 'mode' in json_data:
+                mode = int(json_data['mode'])
+                print(f'new mode selected with index: {mode}')
+
+                # returns the mode that was sent (in full system this will send the new mode)
+                web.header('Access-Control-Allow-Origin', '*')
+                web.header('Content-Type', 'application/json')
+                return "{\"mode\": " + str(mode) + "}"
+
+            else:
+                print(f'post request doesn\'t contain new mode')
+                return web.BadRequest()
+        except ValueError:
+            # catches error from json.loads
+            print('data from post request is not valid json')
+            return web.BadRequest()
+        except:
+            print('internal server error')
+            return web.InternalError()
 
 
 if __name__ == "__main__":
