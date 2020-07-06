@@ -7,22 +7,19 @@ from colorsys import hsv_to_rgb
 from PIL import Image, ImageDraw
 
 from helpers.get_project_path import get_project_path
+from modes.base_mode import BaseMode
 
-class ClockMode:
+class ClockMode(BaseMode):
     '''a led mode that displays a clock with the current time'''
-    def __init__(self, unicornhatmini, config):
-        self.unicornhatmini = unicornhatmini
-        self.config = config
-
 
     def display_frame(self):
         '''used to display the next frame of the clock mode (should be run at least once a second)'''
 
         # loads config
-        PLAIN_COLOR = self.config['CLOCK_MODE']['PLAIN_COLOR'].lower() == 'true'
-        COLOR_ROTATION_SPEED = float(self.config['CLOCK_MODE']['COLOR_ROTATION_SPEED'])
-        COLOR_PAN_SPEED = float(self.config['CLOCK_MODE']['COLOR_PAN_SPEED'])
-        COLOR_SPACING = float(self.config['CLOCK_MODE']['COLOR_SPACING'])
+        PLAIN_COLOR = self.config.getboolean('CLOCK_MODE', 'PLAIN_COLOR', fallback=False)
+        COLOR_ROTATION_SPEED = self.config.getfloat('CLOCK_MODE', 'COLOR_ROTATION_SPEED', fallback=0.5)
+        COLOR_PAN_SPEED = self.config.getfloat('CLOCK_MODE', 'COLOR_PAN_SPEED', fallback=0.5)
+        COLOR_SPACING = self.config.getfloat('CLOCK_MODE', 'COLOR_SPACING', fallback=0.05)
 
 
         display_width, display_height = self.unicornhatmini.get_shape()
@@ -81,6 +78,8 @@ class ClockMode:
                     self.unicornhatmini.set_pixel(x, y, 0, 0, 0)
 
         self.unicornhatmini.show()
+
+        return self.config.getint('CLOCK_MODE', 'FPS', fallback=30)
 
 
     def get_image_for_number(self, num):

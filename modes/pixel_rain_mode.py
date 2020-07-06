@@ -1,31 +1,33 @@
 '''contains class PixelRainMode that is used to displays coloured pixels moving down the screen grid/screen'''
+
 import random
 import time
+
 from colorsys import hsv_to_rgb
 from PIL import Image, ImageDraw
-from helpers.get_project_path import get_project_path
 
-class PixelRainMode:
+from helpers.get_project_path import get_project_path
+from modes.base_mode import BaseMode
+
+class PixelRainMode(BaseMode):
     '''a led mode that displays coloured pixels moving down the screen'''
     def __init__(self, unicornhatmini, config):
-        self.unicornhatmini = unicornhatmini
-        self.config = config
+        super().__init__(unicornhatmini, config)
         self.pixels = []
-        number_of_pixels = int(self.config['PIXEL_RAIN_MODE']['NUMBER_OF_PIXELS'])
+        number_of_pixels = self.config.getint('PIXEL_RAIN_MODE', 'NUMBER_OF_PIXELS', fallback=5)
         self.number_of_pixels = number_of_pixels
         self.frame_counter = 0
 
         self.add_initial_pixels()
 
 
-
     def display_frame(self):
         '''used to display the next frame of the clock mode (should be run at least once a second)'''
 
-        UPDATE_POSITION_EVERY_X_FRAMES = int(self.config['PIXEL_RAIN_MODE']['UPDATE_POSITION_EVERY_X_FRAMES'])
-        COLOR_ROTATION_SPEED = float(self.config['PIXEL_RAIN_MODE']['COLOR_ROTATION_SPEED'])
+        UPDATE_POSITION_EVERY_X_FRAMES = self.config.getint('PIXEL_RAIN_MODE', 'UPDATE_POSITION_EVERY_X_FRAMES', fallback=2)
+        COLOR_ROTATION_SPEED = self.config.getfloat('PIXEL_RAIN_MODE', 'COLOR_ROTATION_SPEED', fallback=0.5)
 
-        self.frame_counter+=1
+        self.frame_counter += 1
         if self.frame_counter % UPDATE_POSITION_EVERY_X_FRAMES == 0:
             self.update_pixel_locations()
 
@@ -41,7 +43,7 @@ class PixelRainMode:
         hue = time.time() * COLOR_ROTATION_SPEED
         r_color, g_color, b_color = [int(c * 255) for c in hsv_to_rgb(hue, 1.0, 1.0)]
         r_background, g_background, b_background = [int(c * 255) for c in hsv_to_rgb(hue, 1.0, 0.3)]
-                    
+
 
         draw.rectangle([(0, 0), (display_width, display_height)], fill=(r_background, g_background, b_background))
 
@@ -59,6 +61,9 @@ class PixelRainMode:
                 self.unicornhatmini.set_pixel(x, y, pixel[0], pixel[1], pixel[2])
 
         self.unicornhatmini.show()
+
+        return self.config.getint('PIXEL_RAIN_MODE', 'FPS', fallback=30)
+
 
 
     def update_pixel_locations(self):

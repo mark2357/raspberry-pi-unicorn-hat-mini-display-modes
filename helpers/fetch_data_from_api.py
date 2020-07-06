@@ -4,7 +4,10 @@ import requests
 def fetch_data_from_api(url):
     '''returns data from API endpoint'''
     # Make a GET request to fetch the raw HTML content
-    request = requests.get(url)
+    response = requests.get(url)
 
-    content = request.text
+    if response.status_code != 200:
+        print(f"error status code is not 200 it's {response.status_code} from url {url}")
+
+    content = response.text
     return content

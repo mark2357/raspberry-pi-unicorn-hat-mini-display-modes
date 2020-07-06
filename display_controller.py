@@ -16,11 +16,11 @@ from modes.pixel_rain_mode import PixelRainMode
 class DisplayController:
     '''used to controll switching between the different dispaly modes'''
     def __init__(self):
-        self.modes = [ClockMode, NumbersFactTextMode, PokeRandomInfoTextMode, Covid19NewCasesTextMode, PixelRainMode]
+        self.modes = [ClockMode, Covid19NewCasesTextMode, NumbersFactTextMode, PixelRainMode, PokeRandomInfoTextMode]
         self.mode = None
         self.unicornhatmini = UnicornHATMini()
         self.config = get_config()
-        self.mode_index = int(self.config['GENERAL']['INITIAL_MODE_INDEX'])
+        self.mode_index = self.config.getint('GENERAL', 'INITIAL_MODE_INDEX', fallback=0)
         self.mode_update_needed = False
         self.running = False
 
@@ -72,17 +72,17 @@ class DisplayController:
 
     def run(self):
         '''used to start running the led display'''
-        self.unicornhatmini.set_brightness(float(self.config['GENERAL']['BRIGHTNESS']))
-        self.unicornhatmini.set_rotation(int(self.config['GENERAL']['ROTATION']))
+        self.unicornhatmini.set_brightness(self.config.getfloat('GENERAL', 'BRIGHTNESS', fallback=0.1))
+        self.unicornhatmini.set_rotation(self.config.getint('GENERAL', 'ROTATION', fallback=0))
         self.update_mode()
         self.running = True
 
-        frame_interval = 1.0 / float(self.config['GENERAL']['FPS'])
+        frame_interval = 1.0 / 30
 
         while self.running:
             start_time = time.time()
 
-            self.mode.display_frame()
+            frame_interval = 1.0 / self.mode.display_frame()
 
             end_time = time.time()
             if end_time - start_time < frame_interval:

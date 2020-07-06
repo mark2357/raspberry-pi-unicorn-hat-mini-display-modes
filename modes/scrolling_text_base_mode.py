@@ -3,12 +3,13 @@
 
 from helpers.text_display import TextDisplay
 from helpers.get_text_width import get_text_width
+from modes.base_mode import BaseMode
 
+class ScrollingTextBaseMode(BaseMode):
+    '''a base class for displaying scrolling text'''
 
-class ScrollingTextBaseMode:
     def __init__(self, unicornhatmini, config):
-        self.unicornhatmini = unicornhatmini
-        self.config = config
+        super().__init__(unicornhatmini, config)
         self.offset_x = 0
         self.current_text = ''
         self.current_text_length = 0
@@ -16,6 +17,7 @@ class ScrollingTextBaseMode:
         self.color_g = 100
         self.color_b = 120
         self.text_display = TextDisplay(unicornhatmini, self.current_text)
+        self.mode_config_name = 'SCROLLING_TEXT_BASE_MODE'
 
         self.update_current_text()
 
@@ -29,6 +31,8 @@ class ScrollingTextBaseMode:
             self.update_current_text()
 
         self.text_display.display_text(self.offset_x, self.color_r, self.color_g, self.color_b)
+
+        return self.config.getint(self.mode_config_name, 'FPS', fallback=30)
 
 
     def update_current_text(self):

@@ -14,7 +14,7 @@ def fetch_html_and_extract_data_from_url(url):
     response = urllib.request.urlopen(url)
 
     if response.getcode() != 200:
-        print(f"error status code is not 200 it's {response.getcode()}")
+        print(f"error status code is not 200 it's {response.getcode()} from url {url}")
 
     html_content = response.read()
 
