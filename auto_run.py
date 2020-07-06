@@ -30,7 +30,7 @@ class Index:
     def GET(self):
         '''handles get requests to the server'''
         try:
-            mode_names = ['Clock', 'Covid 19 New Cases', 'Numbers Facts', 'Pixel Rain', 'Random Pokemon Info']
+            mode_names = ['Clock', 'Color Wave', 'Covid 19 New Cases', 'Numbers Facts', 'Pixel Rain', 'Random Pokemon Info']
             current_mode_index = display_controller.mode_index
             return render.index(mode_names, current_mode_index)
         except:

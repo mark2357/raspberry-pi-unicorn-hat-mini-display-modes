@@ -10,13 +10,13 @@ from modes.numbers_fact_text_mode import NumbersFactTextMode
 from modes.poke_random_info_text_mode import PokeRandomInfoTextMode
 from modes.covid_19_new_cases_text_mode import Covid19NewCasesTextMode
 from modes.pixel_rain_mode import PixelRainMode
-
+from modes.color_wave_mode import ColorWaveMode
 
 
 class DisplayController:
     '''used to controll switching between the different dispaly modes'''
     def __init__(self):
-        self.modes = [ClockMode, Covid19NewCasesTextMode, NumbersFactTextMode, PixelRainMode, PokeRandomInfoTextMode]
+        self.modes = [ClockMode, ColorWaveMode, Covid19NewCasesTextMode, NumbersFactTextMode, PixelRainMode, PokeRandomInfoTextMode]
         self.mode = None
         self.unicornhatmini = UnicornHATMini()
         self.config = get_config()
