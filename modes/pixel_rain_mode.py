@@ -49,10 +49,7 @@ class PixelRainMode(BaseMode):
 
         for pixel in self.pixels:
             # draws pixels on bitmap
-            draw.bitmap((pixel['x'], pixel['y'] - 2), pixel_sprite)
-            # draw.point((pixel['x'], pixel['y']), fill=(r_color, g_color, b_color))
-            # print(f"pixel at {pixel['x']}, {pixel['y']}")
-
+            draw.bitmap((pixel['x'], pixel['y'] - 2), pixel_sprite, fill=(r_color, g_color, b_color))
 
         for y in range(display_height):
             for x in range(display_width):
@@ -80,6 +77,7 @@ class PixelRainMode(BaseMode):
     def remove_old_pixels(self):
         '''removes pixels below the bottom of the screen'''
 
+        # pylint: disable=unused-variable
         display_width, display_height = self.unicornhatmini.get_shape()
         pixels_to_remove = []
 
@@ -97,6 +95,7 @@ class PixelRainMode(BaseMode):
     def add_new_pixels(self):
         '''adds new pixels as some have alr'''
 
+        # pylint: disable=unused-variable
         display_width, display_height = self.unicornhatmini.get_shape()
 
         pixels_to_add = self.number_of_pixels - len(self.pixels)
@@ -113,7 +112,7 @@ class PixelRainMode(BaseMode):
         self.pixels = []
         display_width, display_height = self.unicornhatmini.get_shape()
 
-
+        # pylint: disable=unused-variable
         for x in range(0, self.number_of_pixels):
             new_pixel = dict()
             new_pixel['x'] = random.randrange(0, display_width)

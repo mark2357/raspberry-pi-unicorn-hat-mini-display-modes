@@ -19,6 +19,7 @@ class Covid19NewCasesTextMode(ScrollingTextBaseMode):
 
 
     def update_current_text(self):
+        '''overrides method to update text'''
         self.check_update_data()
         self.set_current_text(self.current_string)
 
