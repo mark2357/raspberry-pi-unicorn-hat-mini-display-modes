@@ -5,14 +5,22 @@
 
 import threading
 import json
+import os
+
 import web
 
 from display_controller import DisplayController
 from web_controller import WebController
 from shutdown_script import shutdown_script
+from helpers.get_project_path import get_project_path
 
 # pylint: disable=invalid-name
 display_controller = None
+
+
+# sets working directory to folder of the project
+os.chdir(get_project_path())
+
 
 # defines class used for handling webserver requests
 class Index:
@@ -103,6 +111,7 @@ if __name__ == "__main__":
 
 
         print('starting webserver')
+        # render = web.template.render(os.path.join(get_project_path(), 'webserver/templates/'))
         render = web.template.render('webserver/templates/')
 
         urls = (

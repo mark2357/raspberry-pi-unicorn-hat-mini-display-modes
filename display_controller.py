@@ -72,34 +72,30 @@ class DisplayController:
 
     def run(self):
         '''used to start running the led display'''
-        try:
-            self.unicornhatmini.set_brightness(float(self.config['GENERAL']['BRIGHTNESS']))
-            self.unicornhatmini.set_rotation(int(self.config['GENERAL']['ROTATION']))
-            self.update_mode()
-            self.running = True
+        self.unicornhatmini.set_brightness(float(self.config['GENERAL']['BRIGHTNESS']))
+        self.unicornhatmini.set_rotation(int(self.config['GENERAL']['ROTATION']))
+        self.update_mode()
+        self.running = True
 
-            frame_interval = 1.0 / float(self.config['GENERAL']['FPS'])
+        frame_interval = 1.0 / float(self.config['GENERAL']['FPS'])
 
-            while self.running:
-                start_time = time.time()
+        while self.running:
+            start_time = time.time()
 
-                self.mode.display_frame()
+            self.mode.display_frame()
 
-                end_time = time.time()
-                if end_time - start_time < frame_interval:
-                    time.sleep(frame_interval - (end_time - start_time))
+            end_time = time.time()
+            if end_time - start_time < frame_interval:
+                time.sleep(frame_interval - (end_time - start_time))
 
-                if self.mode_update_needed is True:
-                    self.update_mode()
+            if self.mode_update_needed is True:
+                self.update_mode()
 
 
-            if not self.running:
-                print('display controller shutting down')
-                self.unicornhatmini.clear()
-                self.unicornhatmini.show()
-
-        except KeyboardInterrupt:
-            print('KeyboardInterrupt')
+        if not self.running:
+            print('display controller shutting down')
+            self.unicornhatmini.clear()
+            self.unicornhatmini.show()
 
 
     def stop(self):
