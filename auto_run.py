@@ -100,31 +100,30 @@ def run_display():
 
 
 if __name__ == "__main__":
-    try:
-        print('creating display controller')
-        display_controller = DisplayController()
+    print('creating display controller')
+    display_controller = DisplayController()
 
-        p1 = threading.Thread(target=run_display)
-        print('starting display controller thread')
-        p1.start()
-        print('finished starting display controller thread')
+    p1 = threading.Thread(target=run_display)
+    print('starting display controller thread')
+    p1.start()
+    print('finished starting display controller thread')
 
 
-        print('starting webserver')
-        # render = web.template.render(os.path.join(get_project_path(), 'webserver/templates/'))
-        render = web.template.render('webserver/templates/')
+    print('starting webserver')
+    # render = web.template.render(os.path.join(get_project_path(), 'webserver/templates/'))
+    render = web.template.render('webserver/templates/')
 
-        urls = (
-            '/', 'Index',
-            '/change-mode/', 'ChangeMode',
-            '/shutdown/', 'Shutdown'
-        )
+    urls = (
+        '/', 'Index',
+        '/change-mode/', 'ChangeMode',
+        '/shutdown/', 'Shutdown'
+    )
 
-        app = WebController(urls, globals())
-        app.run()
+    app = WebController(urls, globals())
+    app.run()
 
-    except KeyboardInterrupt:
-        print('KeyboardInterrupt')
-        display_controller.stop()
-        p1.join()
-        print('finished waiting for display controller thread to stop')
+    # is only run after keyboard interrupt is pressed
+    display_controller.stop()
+    p1.join()
+    print('finished waiting for display controller thread to stop')
+    print('finished running auto run script')
