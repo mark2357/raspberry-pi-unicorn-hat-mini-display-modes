@@ -2,3 +2,4 @@ examples
 *.sqlite
 __pycache__
 test.py
+config.ini

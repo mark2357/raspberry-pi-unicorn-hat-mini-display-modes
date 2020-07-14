@@ -5,6 +5,7 @@ from unicornhatmini import UnicornHATMini
 
 # from shutdown_script import shutdown_script
 from helpers.get_config import get_config
+from modes.asx_stock_text_mode import ASXStockTextMode
 from modes.clock_mode import ClockMode
 from modes.numbers_fact_text_mode import NumbersFactTextMode
 from modes.poke_random_info_text_mode import PokeRandomInfoTextMode
@@ -16,7 +17,7 @@ from modes.color_wave_mode import ColorWaveMode
 class DisplayController:
     '''used to controll switching between the different dispaly modes'''
     def __init__(self):
-        self.modes = [ClockMode, ColorWaveMode, Covid19NewCasesTextMode, NumbersFactTextMode, PixelRainMode, PokeRandomInfoTextMode]
+        self.modes = [ASXStockTextMode, ClockMode, ColorWaveMode, Covid19NewCasesTextMode, NumbersFactTextMode, PixelRainMode, PokeRandomInfoTextMode]
         self.mode = None
         self.unicornhatmini = UnicornHATMini()
         self.config = get_config()

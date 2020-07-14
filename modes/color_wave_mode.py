@@ -92,6 +92,7 @@ class ColorWaveMode(BaseMode):
 
         points_to_add = self.number_of_points - len(self.points)
 
+        # pylint: disable=unused-variable
         for x in range(0, points_to_add):
             new_point = dict()
             new_point['x'] = random.randrange(0, display_width)
