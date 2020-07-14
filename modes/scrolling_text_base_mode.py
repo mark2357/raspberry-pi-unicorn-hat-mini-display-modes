@@ -13,9 +13,9 @@ class ScrollingTextBaseMode(BaseMode):
         self.offset_x = 0
         self.current_text = ''
         self.current_text_length = 0
-        self.color_r = 50
-        self.color_g = 100
-        self.color_b = 120
+        self.color_r = 255
+        self.color_g = 255
+        self.color_b = 255
         self.text_display = TextDisplay(unicornhatmini, self.current_text)
         self.mode_config_name = 'SCROLLING_TEXT_BASE_MODE'
 
@@ -45,3 +45,9 @@ class ScrollingTextBaseMode(BaseMode):
         self.current_text = new_current_text
         self.current_text_length = get_text_width(self.unicornhatmini, self.current_text)
         self.text_display.update_text(self.current_text)
+
+    def set_rgb(self, r_color, g_color, b_color):
+        'sets the rgb color of the text'
+        self.color_r = r_color
+        self.color_g = g_color
+        self.color_b = b_color

@@ -1,7 +1,7 @@
 '''contains class that displays stock information from the asx website'''
 
 import time
-
+import ast
 from helpers.fetch_html_data_from_url import fetch_html_and_extract_data_from_url
 from modes.scrolling_text_base_mode import ScrollingTextBaseMode
 
@@ -26,16 +26,12 @@ class ASXStockTextMode(ScrollingTextBaseMode):
 
         current_data = self.current_data[self.display_string_index]
         new_string = current_data['text']
-        
+
         # color_r, color_g, color_b is defined in ScrollingTextBaseMode
         if current_data['price_up'] is True:
-            self.color_r = 0
-            self.color_g = 255
-            self.color_b = 0
+            self.set_rgb(0, 255, 0)
         else:
-            self.color_r = 255
-            self.color_g = 0
-            self.color_b = 0
+            self.set_rgb(255, 0, 0)
 
 
         self.display_string_index = self.display_string_index + 1
@@ -46,7 +42,7 @@ class ASXStockTextMode(ScrollingTextBaseMode):
 
 
     def check_update_data(self):
-        '''checks to determine if the current data asx data is out of date'''
+        '''checks to determine if the current asx data is out of date'''
         # how often the mode should update the data
         update_interval = self.config.getfloat('ASX_STOCK_TEXT_MODE', 'UPDATE_INTERVAL', fallback=300)
 
@@ -59,7 +55,7 @@ class ASXStockTextMode(ScrollingTextBaseMode):
 
         stock_codes_array_string = self.config.get('ASX_STOCK_TEXT_MODE', 'STOCK_CODES', fallback="['TLS']")
         try:
-            stock_codes = eval(stock_codes_array_string)
+            stock_codes = ast.literal_eval(stock_codes_array_string)
         except SyntaxError:
             print('ERROR invalid stock codes using default')
             stock_codes = ['TLS']
@@ -67,7 +63,6 @@ class ASXStockTextMode(ScrollingTextBaseMode):
         current_data = []
         for stock_code in stock_codes:
             stock_info = self.get_stock_info(stock_code)
-            print(f'stock_info {stock_info}')
             if stock_info is not None:
                 current_data.append(stock_info)
 
@@ -75,22 +70,21 @@ class ASXStockTextMode(ScrollingTextBaseMode):
 
 
     def get_stock_info(self, stock_code):
-        '''extracts data from webpage'''
+        '''extracts data from webpage and returns dictionary'''
 
         last_price = 0
         price_up = False
         try:
             data = fetch_html_and_extract_data_from_url(f'https://www.asx.com.au/asx/markets/priceLookup.do?by=asxCodes&asxCodes={stock_code}')
-            print(f'geting new data for stock code: {stock_code}')
             table = data.find("table", class_="datatable")
             if table is None:
-                print('error could not find table with stock data within webpage')
+                print('ERROR could not find table with stock data within webpage')
                 return None
 
             table_rows = table.findAll('tr')
 
             if table_rows is None:
-                print('error could not find table_rows in table')
+                print('ERROR could not find table_rows in table')
                 return None
 
             first_row = True
@@ -104,12 +98,11 @@ class ASXStockTextMode(ScrollingTextBaseMode):
 
                 last_tag = table_row.find('td', class_='last')
                 price_up = last_tag.img['alt'] == 'Up'
-                print(f"last_tag.img['alt'] {last_tag.img['alt']}")
                 last_tag.img.unwrap()
                 last_price = last_tag.decode_contents().strip()
 
         except:
-            print(f'error in processing data from webpage for asx code {stock_code}')
+            print(f'ERROR in processing data from webpage for asx code {stock_code}')
             return None
 
 
