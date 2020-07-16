@@ -103,8 +103,8 @@ class ASXStockTextMode(ScrollingTextBaseMode):
                 if price_change_img is not None:
                     # occurs at start of day price hasn't gone up or down yet
                     price_up = price_change_img['alt'] == 'Up'
+                    last_tag.img.unwrap()
 
-                last_tag.img.unwrap()
                 last_price = last_tag.decode_contents().strip()
 
         except:
