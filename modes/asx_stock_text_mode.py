@@ -30,6 +30,8 @@ class ASXStockTextMode(ScrollingTextBaseMode):
         # color_r, color_g, color_b is defined in ScrollingTextBaseMode
         if current_data['price_up'] is True:
             self.set_rgb(0, 255, 0)
+        elif current_data['price_up'] is None:
+            self.set_rgb(255, 255, 255)
         else:
             self.set_rgb(255, 0, 0)
 
@@ -73,7 +75,7 @@ class ASXStockTextMode(ScrollingTextBaseMode):
         '''extracts data from webpage and returns dictionary'''
 
         last_price = 0
-        price_up = False
+        price_up = None
         try:
             data = fetch_html_and_extract_data_from_url(f'https://www.asx.com.au/asx/markets/priceLookup.do?by=asxCodes&asxCodes={stock_code}')
             table = data.find("table", class_="datatable")
@@ -97,7 +99,11 @@ class ASXStockTextMode(ScrollingTextBaseMode):
                     continue
 
                 last_tag = table_row.find('td', class_='last')
-                price_up = last_tag.img['alt'] == 'Up'
+                price_change_img = last_tag.find('img')
+                if price_change_img is not None:
+                    # occurs at start of day price hasn't gone up or down yet
+                    price_up = price_change_img['alt'] == 'Up'
+
                 last_tag.img.unwrap()
                 last_price = last_tag.decode_contents().strip()
 
