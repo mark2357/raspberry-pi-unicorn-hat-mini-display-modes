@@ -2,7 +2,8 @@
 
 class BaseMode:
     '''base mode that all other modes extend'''
-    def __init__(self, unicornhatmini, config):
+    # pylint: disable=unused-argument
+    def __init__(self, unicornhatmini, config, custom_options=None):
         self.unicornhatmini = unicornhatmini
         self.config = config
 

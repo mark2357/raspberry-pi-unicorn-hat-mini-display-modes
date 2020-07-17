@@ -10,6 +10,7 @@ from modes.clock_mode import ClockMode
 from modes.numbers_fact_text_mode import NumbersFactTextMode
 from modes.poke_random_info_text_mode import PokeRandomInfoTextMode
 from modes.covid_19_new_cases_text_mode import Covid19NewCasesTextMode
+from modes.custom_text_mode import CustomTextMode
 from modes.pixel_rain_mode import PixelRainMode
 from modes.color_wave_mode import ColorWaveMode
 
@@ -17,13 +18,14 @@ from modes.color_wave_mode import ColorWaveMode
 class DisplayController:
     '''used to controll switching between the different dispaly modes'''
     def __init__(self):
-        self.modes = [ASXStockTextMode, ClockMode, ColorWaveMode, Covid19NewCasesTextMode, NumbersFactTextMode, PixelRainMode, PokeRandomInfoTextMode]
+        self.modes = [ASXStockTextMode, ClockMode, ColorWaveMode, Covid19NewCasesTextMode, NumbersFactTextMode, PixelRainMode, PokeRandomInfoTextMode, CustomTextMode]
         self.mode = None
         self.unicornhatmini = UnicornHATMini()
         self.config = get_config()
         self.mode_index = self.config.getint('GENERAL', 'INITIAL_MODE_INDEX', fallback=0)
         self.mode_update_needed = False
         self.running = False
+        self.mode_custom_options = None
 
 
     def mode_increment(self):
@@ -42,10 +44,11 @@ class DisplayController:
         self.mode_update_needed = True
 
 
-    def set_mode(self, new_mode):
+    def set_mode(self, new_mode, custom_options=None):
         '''sets the current mode'''
 
         self.mode_index = new_mode
+        self.mode_custom_options = custom_options
         if self.mode_index > self.get_max_mode_index():
             self.mode_index = 0
 
@@ -61,8 +64,11 @@ class DisplayController:
         if self.mode_index < 0 or self.mode_index > self.get_max_mode_index():
             print(f"error mode index is outside mode range it's value is {self.mode_index}")
             return
-
-        self.mode = self.modes[self.mode_index](self.unicornhatmini, self.config)
+        # only passes custom options if it's not None
+        if self.mode_custom_options is None:
+            self.mode = self.modes[self.mode_index](self.unicornhatmini, self.config)
+        else:
+            self.mode = self.modes[self.mode_index](self.unicornhatmini, self.config, self.mode_custom_options)
         self.mode_update_needed = False
 
 

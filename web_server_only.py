@@ -3,6 +3,8 @@
 
 
 import json
+import string
+
 import web
 
 from web_controller import WebController
@@ -58,6 +60,58 @@ class ChangeMode:
             return web.InternalError()
 
 
+class CustomText:
+    '''handles the requests for the /custom-text/ endpoint'''
+
+    # pylint: disable=invalid-name
+    def POST(self):
+        '''handles post requests to the server'''
+        try:
+            # gets post data
+            data = web.data()
+            # tries to convert data to json (error handled below)
+            json_data = json.loads(data)
+
+            # makes sure custom-text is in the json data
+            if 'custom-text' in json_data and 'custom-color' in json_data:
+                custom_text = str(json_data['custom-text'])
+                custom_color = str(json_data['custom-color'])
+
+                color_valid = True
+                # validates color string
+                if len(custom_color) != 7:
+                    color_valid = False
+                for index, char in enumerate(custom_color):
+                    if index == 0 and char != '#':
+                        color_valid = False
+                        print('no hash at start')
+                    elif index != 0 and char not in string.hexdigits:
+                        color_valid = False
+                        print(f'digit {index} is not valid')
+
+                if color_valid is False:
+                    print(f'custom color {custom_color} is not valid')
+                    return web.BadRequest()
+
+
+                print(f'changing to : custom mode setting custom text to {custom_text} and custom color to {custom_color}')
+                # returns the mode that was sent (in full system this will send the new mode)
+                web.header('Access-Control-Allow-Origin', '*')
+                web.header('Content-Type', 'application/json')
+                return "{\"custom-text\": " + custom_text + ", \"custom-color\": " + custom_color + " }"
+
+            else:
+                print('post request doesn\'t contain custom text to display')
+                return web.BadRequest()
+        except ValueError:
+            # catches error from json.loads
+            print('data from post request is not valid json')
+            return web.BadRequest()
+        except:
+            print('internal server error')
+            return web.InternalError()
+
+
 class Shutdown:
     '''handles the requests for the /shutdown/ endpoint'''
     # pylint: disable=invalid-name
@@ -76,6 +130,7 @@ if __name__ == "__main__":
         urls = (
             '/', 'Index',
             '/change-mode/', 'ChangeMode',
+            '/custom-text/', 'CustomText',
             '/shutdown/', 'Shutdown'
         )
 

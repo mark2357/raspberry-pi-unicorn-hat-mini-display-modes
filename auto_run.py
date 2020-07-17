@@ -6,6 +6,7 @@
 import threading
 import json
 import os
+import string
 
 import web
 
@@ -77,6 +78,62 @@ class ChangeMode:
             return web.InternalError()
 
 
+class CustomText:
+    '''handles the requests for the /custom-text/ endpoint'''
+
+    # pylint: disable=invalid-name
+    def POST(self):
+        '''handles post requests to the server'''
+        try:
+            # gets post data
+            data = web.data()
+            # tries to convert data to json (error handled below)
+            json_data = json.loads(data)
+
+            # makes sure custom-text is in the json data
+            if 'custom-text' in json_data and 'custom-color' in json_data:
+                custom_text = str(json_data['custom-text'])
+                custom_color = str(json_data['custom-color'])
+
+                color_valid = True
+                # validates color string
+                if len(custom_color) != 7:
+                    color_valid = False
+                for x in range(0, len(custom_color)):
+                    if x == 0 and custom_color[x] != '#':
+                        color_valid = False
+                        print('no hash at start')
+                    elif x != 0 and custom_color[x] not in string.hexdigits:
+                        color_valid = False
+                        print(f'digit {x} is not valid')
+
+                if color_valid is False:
+                    print(f'custom color {custom_color} is not valid')
+                    return web.BadRequest()
+
+                print(f'changing to : custom mode setting custom text to {custom_text}')
+                global display_controller
+
+                if isinstance(custom_text, str) and isinstance(custom_color, str):
+                    display_controller.set_mode(7, {'custom_text': custom_text, 'custom_color': custom_color})
+
+                # returns the mode that was sent (in full system this will send the new mode)
+                web.header('Access-Control-Allow-Origin', '*')
+                web.header('Content-Type', 'application/json')
+                return "{\"mode\": 7}"
+
+            else:
+                print('post request doesn\'t contain custom text to display')
+                return web.BadRequest()
+        except ValueError:
+            # catches error from json.loads
+            print('data from post request is not valid json')
+            return web.BadRequest()
+        except:
+            print('internal server error')
+            return web.InternalError()
+
+
 class Shutdown:
     '''handles the requests for the /shutdown/ endpoint'''
     # pylint: disable=invalid-name
@@ -116,7 +173,9 @@ if __name__ == "__main__":
     urls = (
         '/', 'Index',
         '/change-mode/', 'ChangeMode',
-        '/shutdown/', 'Shutdown'
+        '/custom-text/', 'CustomText',
+        '/shutdown/', 'Shutdown',
+
     )
 
     app = WebController(urls, globals())

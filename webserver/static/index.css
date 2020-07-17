@@ -27,7 +27,7 @@ button {
     pointer-events: all;
     border-radius: 0.5em;
     background: #206590;
-    border: 0em solid #09c;
+    border: 0em solid #ffffff;
     color: #eee;
     transition: color 0.3s, background 0.3s;
     cursor: pointer;
@@ -46,6 +46,13 @@ button::-moz-focus-inner {
     border: 0;
 }
 
+button:disabled,
+button[disabled]{
+    border: 0em solid #ffffff;
+    background: #103248;
+    color: #777;
+}
+
 .active-mode {
     background: green;
 }
@@ -59,4 +66,18 @@ button::-moz-focus-inner {
     overflow: hidden;
     width: 50%;
     min-width: 22em;
+}
+
+.custom-text-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.button-wrapper {
+    display: flex;
+}
+
+span {
+    color: #ddd;
 }

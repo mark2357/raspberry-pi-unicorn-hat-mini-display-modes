@@ -11,13 +11,13 @@ from modes.scrolling_text_base_mode import ScrollingTextBaseMode
 class ASXStockTextMode(ScrollingTextBaseMode):
     '''displays the current asx stock information for chosen stocks'''
 
-    def __init__(self, unicornhatmini, config):
+    def __init__(self, unicornhatmini, config, custom_options=None):
         self.last_data_update = time.time()
         self.current_data = []
         self.display_string_index = 0
         self.config = config
         self.update_data()
-        super().__init__(unicornhatmini, config)
+        super().__init__(unicornhatmini, config, custom_options)
 
 
     def update_current_text(self):

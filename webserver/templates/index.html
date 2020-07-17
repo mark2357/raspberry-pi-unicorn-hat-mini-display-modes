@@ -21,11 +21,29 @@ $def with (mode_names, current_mode_index)
                     $mode_names[x]
                     </button>
             </div>
+            <div class='custom-text-container'>
+                <div>
+                    <span>Custom Text:</span>
+                    <input id="custom-text-input" type="text" onkeydown="on_input_value_change()">
+                </div>
+                <div>
+                    <span>Custom Color:</span>
+                    <input type="color" id="custom-color-input" onchange="on_input_value_change()" value="#ffffff">
+                </div>
+                <div class="button-wrapper">
+                    <button id="set-custom-text-button" onclick="on_click_custom_text(this)">
+                        Display Custom Text
+                    </button>
+                    <button id="update-custom-text-button" disabled='true' onclick="on_click_custom_text_update(this)">
+                        Update
+                    </button>
+                </div>
+            </div>
             <div>
                 <button onclick="on_click_shutdown()">
                     Shutdown
                 </button>
-            <div>
+            </div>
         </div>
     </body>
 </html>

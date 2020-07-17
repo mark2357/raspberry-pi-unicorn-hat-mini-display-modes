@@ -11,8 +11,8 @@ from modes.base_mode import BaseMode
 
 class PixelRainMode(BaseMode):
     '''a led mode that displays coloured pixels moving down the screen'''
-    def __init__(self, unicornhatmini, config):
-        super().__init__(unicornhatmini, config)
+    def __init__(self, unicornhatmini, config, custom_options=None):
+        super().__init__(unicornhatmini, config, custom_options)
         self.pixels = []
         number_of_pixels = self.config.getint('PIXEL_RAIN_MODE', 'NUMBER_OF_PIXELS', fallback=5)
         self.number_of_pixels = number_of_pixels

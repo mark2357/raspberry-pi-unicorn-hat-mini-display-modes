@@ -8,8 +8,8 @@ from modes.base_mode import BaseMode
 class ScrollingTextBaseMode(BaseMode):
     '''a base class for displaying scrolling text'''
 
-    def __init__(self, unicornhatmini, config):
-        super().__init__(unicornhatmini, config)
+    def __init__(self, unicornhatmini, config, custom_options=None):
+        super().__init__(unicornhatmini, config, custom_options)
         self.offset_x = 0
         self.current_text = ''
         self.current_text_length = 0

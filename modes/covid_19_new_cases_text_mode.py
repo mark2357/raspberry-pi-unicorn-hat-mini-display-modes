@@ -11,11 +11,11 @@ from modes.scrolling_text_base_mode import ScrollingTextBaseMode
 class Covid19NewCasesTextMode(ScrollingTextBaseMode):
     '''displays the current covid 19 cases for victoria today'''
 
-    def __init__(self, unicornhatmini, config):
+    def __init__(self, unicornhatmini, config, custom_options=None):
         self.last_data_update = time.time()
         self.current_string = 'error could not retrieve data'
         self.update_data()
-        super().__init__(unicornhatmini, config)
+        super().__init__(unicornhatmini, config, custom_options)
 
 
     def update_current_text(self):
