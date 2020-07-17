@@ -18,27 +18,27 @@ $def with (mode_names, current_mode_index)
                         $ class_name = ''
                         $if x == current_mode_index:
                             $ class_name = 'active-mode'
-                        <button class='$class_name' onclick="on_click_mode_switch(this, $x)">
+                        <button class='$class_name' onclick="onClickModeSwitch(this, $x)">
                         $mode_names[x]
                         </button>
                 </div>
                 <div class='custom-text-wrapper'>
                     <div class="input-wrapper">
                         <span>Custom Text:</span>
-                        <input id="custom-text-input" type="text" onkeydown="on_input_value_change()">
+                        <input id="custom-text-input" type="text" onkeydown="onInputValueChange()">
                     </div>
                     <div class="input-wrapper">
                         <span>Custom Color:</span>
-                        <input type="color" id="custom-color-input" onchange="on_input_value_change()" value="#ffffff">
+                        <input type="color" id="custom-color-input" onchange="onInputValueChange()" value="#ffffff">
                     </div>
                     <div class="button-wrapper">
-                        <button id="set-custom-text-button" onclick="on_click_custom_text(this)">
+                        <button id="set-custom-text-button" onclick="onClickCustomText(this)">
                             Display Custom Text
                         </button>
                     </div>
                 </div>
                 <div>
-                    <button onclick="on_click_shutdown()">
+                    <button onclick="onClickShutdown()">
                         Shutdown
                     </button>
                 </div>

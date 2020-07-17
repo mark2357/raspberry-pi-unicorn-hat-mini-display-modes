@@ -2,33 +2,32 @@
  * @description
  * handles when a mode button is clicked
  * @param {element} e 
- * @param {number} mode_index the new mode index
+ * @param {number} modeIndex the new mode index
  */
-function on_click_mode_switch(e, mode_index) {
+function onClickModeSwitch(e, modeIndex) {
 
     // sends post request to server to set mode of LED display
     let content = JSON.stringify({
-        'mode': mode_index
+        'mode': modeIndex
     });
 
     let handleResponseFunc = (xhr) => {
         if (xhr.readyState == XMLHttpRequest.DONE) {
             updateActiveButtons(e);
-            set_custom_text_button_text_set_mode();
+            setCustomTextButtonTextSetMode();
         }
     }
-    send_post_request('change-mode/', content, handleResponseFunc);
+    sendPostRequest('change-mode/', content, handleResponseFunc);
 }
 
 /**
  * @description
  * handles when the color input or text input value changes
  */
-function on_input_value_change() {
-    
+function onInputValueChange() {
     // if the active mode is the custom text mode then the custom text buttons text is changed to update
     if(document.getElementById('set-custom-text-button').classList.contains('active-mode')) {
-        set_custom_text_button_text_update()        
+        setCustomTextButtonTextUpdate()        
     }
 }
 
@@ -37,7 +36,7 @@ function on_input_value_change() {
  * handles when the custom text button is clicked
  * @param {element} e 
  */
-function on_click_custom_text(e) {
+function onClickCustomText(e) {
    
     // gets text from input box
     let customText = document.getElementById('custom-text-input').value;
@@ -52,10 +51,10 @@ function on_click_custom_text(e) {
     let handleResponseFunc = (xhr) => {
         if (xhr.readyState == XMLHttpRequest.DONE) {
             updateActiveButtons(e);
-            set_custom_text_button_text_set_mode()
+            setCustomTextButtonTextSetMode()
         }
     }
-    send_post_request('custom-text/', content, handleResponseFunc);
+    sendPostRequest('custom-text/', content, handleResponseFunc);
 }
 
 
@@ -63,7 +62,7 @@ function on_click_custom_text(e) {
  * @description
  * handles when the shutdown button is clicked
  */
-function on_click_shutdown() {
+function onClickShutdown() {
     
     // sends post request to server to shutdown the server
     // let baseUrl = window.location.href;
@@ -72,7 +71,7 @@ function on_click_shutdown() {
     // xhr.setRequestHeader('Content-Type', 'application/json');
 
     // xhr.send();
-    send_post_request('shutdown/', null);
+    sendPostRequest('shutdown/', null);
 }
 
 function updateActiveButtons(e) {
@@ -94,7 +93,7 @@ function updateActiveButtons(e) {
  * @description
  * changes the text of the custom text button to the update text 
  */
-function set_custom_text_button_text_update() {
+function setCustomTextButtonTextUpdate() {
     document.getElementById('set-custom-text-button').innerHTML = 'Update Custom Text';
 }
 
@@ -102,7 +101,7 @@ function set_custom_text_button_text_update() {
  * @description
  * changes the text of the custom text button to the display text 
  */
-function set_custom_text_button_text_set_mode() {
+function setCustomTextButtonTextSetMode() {
     document.getElementById('set-custom-text-button').innerHTML = 'Display Custom Text';
 }
 
@@ -111,7 +110,7 @@ function set_custom_text_button_text_set_mode() {
  * @description
  * sends request to server
  */
-function send_post_request(urlExtension, requestContent, returnHandleFunc=null) {
+function sendPostRequest(urlExtension, requestContent, returnHandleFunc=null) {
   
     // sends post request to server to shutdown the server
     let baseUrl = window.location.href;
