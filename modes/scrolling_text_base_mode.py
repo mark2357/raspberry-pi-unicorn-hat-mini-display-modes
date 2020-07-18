@@ -3,6 +3,7 @@
 
 from helpers.text_display import TextDisplay
 from helpers.get_text_width import get_text_width
+from helpers.validate_string import validate_string
 from modes.base_mode import BaseMode
 
 class ScrollingTextBaseMode(BaseMode):
@@ -42,7 +43,12 @@ class ScrollingTextBaseMode(BaseMode):
 
     def set_current_text(self, new_current_text):
         '''should be called by child classes to correctly set the current text (WARNING do not set text by assigning variable)'''
-        self.current_text = new_current_text
+
+        validated_text = validate_string(new_current_text)
+        if validated_text != new_current_text:
+            print('some characters were removed from display text')
+
+        self.current_text = validated_text
         self.current_text_length = get_text_width(self.unicornhatmini, self.current_text)
         self.text_display.update_text(self.current_text)
 
