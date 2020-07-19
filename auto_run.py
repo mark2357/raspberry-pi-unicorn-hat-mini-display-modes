@@ -14,6 +14,7 @@ from display_controller import DisplayController
 from web_controller import WebController
 from shutdown_script import shutdown_script
 from helpers.get_project_path import get_project_path
+from get_mode_data import get_mode_data
 
 # pylint: disable=invalid-name
 display_controller = None
@@ -31,9 +32,14 @@ class Index:
     def GET(self):
         '''handles get requests to the server'''
         try:
-            mode_names = ['ASX Stock Mode', 'Clock', 'Color Wave', 'Covid 19 New Cases', 'Numbers Facts', 'Pixel Rain', 'Random Pokemon Info']
-            current_mode_index = display_controller.mode_index
-            return render.index(mode_names, current_mode_index)
+            modes_data = get_mode_data()
+
+            custom_text_mode_enabled = modes_data['custom_text_mode']['enabled']
+            # removes custom text mode as it's displayed differently
+            modes_data.pop('custom_text_mode')
+
+            current_mode_id = display_controller.mode_id
+            return render.index(modes_data, custom_text_mode_enabled, current_mode_id)
         except:
             print('internal server error')
             return web.InternalError()
@@ -54,17 +60,16 @@ class ChangeMode:
             mode = None
             # makes sure mode is in the json data
             if 'mode' in json_data:
-                mode = int(json_data['mode'])
-                print(f'new mode selected with index: {mode}')
+                mode = json_data['mode']
+                print(f'new mode selected with id: {mode}')
                 global display_controller
 
-                if isinstance(mode, int):
-                    display_controller.set_mode(mode)
+                display_controller.set_mode(mode)
 
                 # returns the mode that was sent (in full system this will send the new mode)
                 web.header('Access-Control-Allow-Origin', '*')
                 web.header('Content-Type', 'application/json')
-                return "{\"mode\": " + str(mode) + "}"
+                return '{"mode": "' + mode + '"}'
 
             else:
                 print('post request doesn\'t contain new mode')
@@ -115,7 +120,7 @@ class CustomText:
                 global display_controller
 
                 if isinstance(custom_text, str) and isinstance(custom_color, str):
-                    display_controller.set_mode(7, {'custom_text': custom_text, 'custom_color': custom_color})
+                    display_controller.set_mode('custom_text_mode', {'custom_text': custom_text, 'custom_color': custom_color})
 
                 # returns the mode that was sent (in full system this will send the new mode)
                 web.header('Access-Control-Allow-Origin', '*')

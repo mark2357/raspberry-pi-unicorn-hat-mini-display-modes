@@ -2,20 +2,25 @@
  * @description
  * handles when a mode button is clicked
  * @param {element} e 
- * @param {number} modeIndex the new mode index
+ * @param {string} modeId the string id of the new mode
  */
-function onClickModeSwitch(e, modeIndex) {
+function onClickModeSwitch(e, modeId) {
 
     // sends post request to server to set mode of LED display
     let content = JSON.stringify({
-        'mode': modeIndex
+        'mode': modeId
     });
 
     let handleResponseFunc = (xhr) => {
         if (xhr.readyState == XMLHttpRequest.DONE) {
+            if(xhr.status == 200) {
             updateActiveButtons(e);
             setCustomTextButtonTextSetMode();
-        }
+            }
+            else {
+                console.error(`HTTP request failed with ${xhr.response}`);
+            }
+        }        
     }
     sendPostRequest('change-mode/', content, handleResponseFunc);
 }
@@ -50,9 +55,14 @@ function onClickCustomText(e) {
 
     let handleResponseFunc = (xhr) => {
         if (xhr.readyState == XMLHttpRequest.DONE) {
+            if(xhr.status == 200) {
             updateActiveButtons(e);
-            setCustomTextButtonTextSetMode()
-        }
+            setCustomTextButtonTextSetMode();
+            }
+            else {
+                console.error(`HTTP request failed with ${xhr.response}`);
+            }
+        }   
     }
     sendPostRequest('custom-text/', content, handleResponseFunc);
 }

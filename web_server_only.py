@@ -8,7 +8,7 @@ import string
 import web
 
 from web_controller import WebController
-
+from get_mode_data import get_mode_data
 # defines class used for handling webserver requests
 class Index:
     '''handles the requests for the / endpoint'''
@@ -17,9 +17,12 @@ class Index:
     def GET(self):
         '''handles get requests to the server'''
         try:
-            mode_names = ['Clock', 'Color Wave', 'Numbers Facts', 'Random Pokemon Info', 'Covid 19 New Cases', 'Pixel Rain']
-            current_mode_index = 0
-            return render.index(mode_names, current_mode_index)
+            modes_data = get_mode_data()
+
+            custom_text_mode_enabled = modes_data['custom_text_mode']['enabled']
+
+            current_mode_id = 'clock_mode'
+            return render.index(modes_data, custom_text_mode_enabled, current_mode_id)
         except:
             print('internal server error')
             return web.InternalError()

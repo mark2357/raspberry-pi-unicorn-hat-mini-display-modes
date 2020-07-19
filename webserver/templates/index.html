@@ -1,4 +1,4 @@
-$def with (mode_names, current_mode_index)
+$def with (modes_data, custom_text_mode_enabled, current_mode_id)
 <html>
     <head>
         <title>LED Modes</title>
@@ -14,29 +14,31 @@ $def with (mode_names, current_mode_index)
                     <h1>LED Controller Modes</h1>
                 </div>
                 <div class="mode-buttons-wrapper">
-                    $for x in range(len(mode_names)):
-                        $ class_name = ''
-                        $if x == current_mode_index:
-                            $ class_name = 'active-mode'
-                        <button class='$class_name' onclick="onClickModeSwitch(this, $x)">
-                        $mode_names[x]
-                        </button>
+                    $for id, mode_data in modes_data.items():
+                        $if mode_data['enabled']:
+                            $ class_name = ''
+                            $if id == current_mode_id:
+                                $ class_name = 'active-mode'
+                            <button class='$class_name' onclick="onClickModeSwitch(this, '$id')">
+                            $mode_data['name']
+                            </button>
                 </div>
-                <div class='custom-text-wrapper'>
-                    <div class="input-wrapper">
-                        <span>Custom Text:</span>
-                        <input id="custom-text-input" type="text" onkeydown="onInputValueChange()">
+                $if custom_text_mode_enabled:
+                    <div class='custom-text-wrapper'>
+                        <div class="input-wrapper">
+                            <span>Custom Text:</span>
+                            <input id="custom-text-input" type="text" onkeydown="onInputValueChange()">
+                        </div>
+                        <div class="input-wrapper">
+                            <span>Custom Color:</span>
+                            <input type="color" id="custom-color-input" onchange="onInputValueChange()" value="#ffffff">
+                        </div>
+                        <div class="button-wrapper">
+                            <button id="set-custom-text-button" onclick="onClickCustomText(this)">
+                                Display Custom Text
+                            </button>
+                        </div>
                     </div>
-                    <div class="input-wrapper">
-                        <span>Custom Color:</span>
-                        <input type="color" id="custom-color-input" onchange="onInputValueChange()" value="#ffffff">
-                    </div>
-                    <div class="button-wrapper">
-                        <button id="set-custom-text-button" onclick="onClickCustomText(this)">
-                            Display Custom Text
-                        </button>
-                    </div>
-                </div>
                 <div>
                     <button onclick="onClickShutdown()">
                         Shutdown
