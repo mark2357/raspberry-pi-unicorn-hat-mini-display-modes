@@ -38,7 +38,6 @@ class DisplayController:
         self.mode_id = new_mode_id
         self.mode_custom_options = custom_options
         self.mode_update_needed = True
-        print(f'self.mode_update_needed: {self.mode_update_needed}')
 
 
     def update_mode(self):

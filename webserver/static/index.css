@@ -53,7 +53,7 @@ button[disabled]{
     height: 100vh;
     background-color: #222222;
     font-family: Arial, Helvetica, sans-serif;
-    overflow: scroll;
+    overflow-y: scroll;
 }
 
 .content-wrapper {
