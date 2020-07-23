@@ -24,6 +24,7 @@ Displays the current time in 24 hour time with either plain white or colored tex
 
 |Name|Type|Description|
 |---|---|---|
+|HOUR_12_TIME|boolean| if 12 hour time should be used instead of 24 hour time
 |PLAIN_COLOR|boolean| if a plain white color is used for the text or if the wide range of colors are used|
 |COLOR_ROTATION_SPEED|number| how fast the colors wave rotates around the center point of the led screen |
 |COLOR_PAN_SPEED|number| how fast the colors move vertically or horizontally across the screen |
@@ -49,6 +50,11 @@ The data is scraped from https://covidlive.com.au/vic
 
 ### custom text
 Custom text mode allows the user to display custom text on screen that is repeated, the custom text can be set via the web page / interface
+
+
+|Name|Type|Description|
+|---|---|---|
+|INITIAL_CUSTOM_TEXT|string|the initial test that should be shown if the text is set as the inital custom text|
 
 
 ### numbers fact text
@@ -95,11 +101,11 @@ copy the ```config_example.ini``` and rename it config.ini
 
 
 ## running scripts
-There are several script that are designed to be run via the 
+There are several script that are designed to be run via the command line
 ### running the project
-The module can be run by calling the auto_run.py script
+The module can be run by calling the run.py script
 ```
-python3 auto_run.py
+python3 run.py
 ```
 
 ### webserver only
@@ -112,10 +118,9 @@ python3 webserver_only.py
 
 ### forcefully stopping the script
 This is useful if you have setup the script to run automatically at startup e.g. via crontab
-Please note this will not turn off the LEDs on the screen as it is forcefully stopping the process
 
 ```
-bash stop_auto_run.sh
+bash stop_run.sh
 ```
 
 

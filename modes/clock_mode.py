@@ -20,6 +20,7 @@ class ClockMode(BaseMode):
         COLOR_ROTATION_SPEED = self.config.getfloat('CLOCK_MODE', 'COLOR_ROTATION_SPEED', fallback=0.5)
         COLOR_PAN_SPEED = self.config.getfloat('CLOCK_MODE', 'COLOR_PAN_SPEED', fallback=0.5)
         COLOR_SPACING = self.config.getfloat('CLOCK_MODE', 'COLOR_SPACING', fallback=0.05)
+        HOUR_12_TIME = self.config.getboolean('CLOCK_MODE', 'HOUR_12_TIME', fallback=False)
 
 
         display_width, display_height = self.unicornhatmini.get_shape()
@@ -31,9 +32,14 @@ class ClockMode(BaseMode):
         # gets the current time
         current_time = datetime.datetime.now()
 
+        hour = current_time.hour
+        # determines if 12 hour time is needed
+        if HOUR_12_TIME:
+            hour = hour % 12
+
         # determines characters
-        hour_char_1 = math.floor(current_time.hour / 10)
-        hour_char_2 = current_time.hour % 10
+        hour_char_1 = math.floor(hour / 10)
+        hour_char_2 = hour % 10
         min_char_1 = math.floor(current_time.minute / 10)
         min_char_2 = current_time.minute % 10
 

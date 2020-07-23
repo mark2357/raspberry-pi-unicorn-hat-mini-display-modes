@@ -8,7 +8,7 @@ class CustomTextMode(ScrollingTextBaseMode):
 
     def __init__(self, unicornhatmini, config, custom_options=None):
         if custom_options is None:
-            self.custom_text = 'insert custom text here'
+            self.custom_text = config.get('CUSTOM_TEXT_MODE', 'INITIAL_CUSTOM_TEXT', fallback='custom text')
         else:
             self.custom_text = custom_options['custom_text']
 
