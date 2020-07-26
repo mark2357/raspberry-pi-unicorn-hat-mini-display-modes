@@ -82,6 +82,12 @@ using the python module random-pokemon-info
 which gets data from the web api https://pokeapi.co/
 
 
+## accessing the web interface / webpage
+The web interface can be accessed on port 8080 of the raspberry pi
+You can access the web page from any standard web browser
+e.g. from the url x.x.x.x:8080 with the four x are replaced with is replaced with the ip address of the raspberry pi
+
+
 
 ## dependencies
 
@@ -131,7 +137,6 @@ This is useful if you have setup the script to run automatically at startup e.g.
 ```
 bash stop_run.sh
 ```
-
 
 ## settings
 The possible settings can be found the config.ini file
