@@ -85,8 +85,8 @@ class Covid19NewCasesTextMode(ScrollingTextBaseMode):
         except:
             print('error in processing data from webpage for covid 19 new cases text mode')
         if len(output_data) > 1:
-            todays_data = output_data[len(output_data) - 1]
-            yesterdays_data = output_data[len(output_data) - 2]
+            todays_data = output_data[0]
+            yesterdays_data = output_data[1]
             output_string = ''
             if todays_data['cases'] is None:
                 output_string = f"todays cases haven't been released yet but yesterday had {yesterdays_data['cases']} cases"
