@@ -2,7 +2,9 @@
 
 import time
 import ast
-from helpers.fetch_html_data_from_url import fetch_html_and_extract_data_from_url
+import json
+
+from helpers.fetch_data_from_api import fetch_data_from_api
 from modes.scrolling_text_base_mode import ScrollingTextBaseMode
 
 
@@ -52,6 +54,7 @@ class ASXStockTextMode(ScrollingTextBaseMode):
             self.update_data()
             self.last_data_update = time.time()
 
+
     def update_data(self):
         '''gets data from url and updates current string'''
 
@@ -77,47 +80,20 @@ class ASXStockTextMode(ScrollingTextBaseMode):
         last_price = 0
         price_up = None
         try:
-            data = fetch_html_and_extract_data_from_url(f'https://www.asx.com.au/asx/markets/priceLookup.do?by=asxCodes&asxCodes={stock_code}')
-            table = data.find("table", class_="datatable")
-            if table is None:
-                print('ERROR could not find table with stock data within webpage')
-                return None
-
-            table_rows = table.findAll('tr')
-
-            if table_rows is None:
-                print('ERROR could not find table_rows in table')
-                return None
-
-            first_row = True
-
-            for table_row in table_rows:
-
-                # skips the first row as it's the header
-                if first_row is True:
-                    first_row = False
-                    continue
-
-                last_tag = table_row.find('td', class_='last')
-                price_change_img = last_tag.find('img')
-                if price_change_img is not None:
-                    # occurs at start of day price hasn't gone up or down yet
-                    price_up = price_change_img['alt'] == 'Up'
-                    last_tag.img.unwrap()
-
-                last_price = last_tag.decode_contents().strip()
-
+            data = fetch_data_from_api(f'https://asx.api.markitdigital.com/asx-research/1.0/companies/{stock_code}/header')
+            json_data = json.loads(data)
+            last_price = json_data['data']['priceLast']
+            price_up = json_data['data']['priceChange'] > 0
         except:
-            print(f'ERROR in processing data from webpage for asx code {stock_code}')
+            print(f'ERROR in processing data from endpoint for asx code {stock_code}')
             return None
-
 
         stock_info = dict()
 
         if self.config.getboolean('ASX_STOCK_TEXT_MODE', 'SHORTEN_TEXT', fallback=False):
-            stock_info['text'] = f'{stock_code} is {last_price}'
+            stock_info['text'] = f'{stock_code} is {round(last_price, 2)}'
         else:
-            stock_info['text'] = f'The Current Price for {stock_code} is {last_price}'
+            stock_info['text'] = f'The Current Price for {stock_code} is {round(last_price, 2)}'
 
         stock_info['price_up'] = price_up
 
